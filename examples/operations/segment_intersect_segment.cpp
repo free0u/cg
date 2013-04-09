@@ -78,13 +78,6 @@ struct segment_intersect_segment_viewer : cg::visualization::viewer_adapter
 
    bool on_move(const point_2f & p)
    {
-//      current_point_ = p;
-
-//      if (!idx_)
-//         return true;
-
-//      t_[*idx_] = p;
-
       if (!id_segmentx_)
       {
          return true;
