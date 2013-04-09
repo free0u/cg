@@ -27,7 +27,7 @@ struct triangle_contains_point_viewer : cg::visualization::viewer_adapter
    {
       drawer.set_color(Qt::white);
       if (current_point_ && cg::contains(t_, *current_point_))
-         drawer.set_color(Qt::green);
+         drawer.set_color(Qt::red);
 
       for (size_t l = 0, lp = 2; l != 3; lp = l++)
          drawer.draw_line(t_[lp], t_[l]);
@@ -35,9 +35,9 @@ struct triangle_contains_point_viewer : cg::visualization::viewer_adapter
 
    void print(cg::visualization::printer_type & p) const
    {
-      p.corner_stream() << "press mouse lbutton with CTRL key near triangle vertex to move it"
+      p.corner_stream() << "press mouse rbutton near triangle vertex to move it"
                         << cg::visualization::endl
-                        << "if triangle is green triangle contains cursor point"
+                        << "if triangle is red triangle contains cursor point"
                         << cg::visualization::endl;
    }
 
@@ -45,7 +45,7 @@ struct triangle_contains_point_viewer : cg::visualization::viewer_adapter
    {
       for (size_t l = 0; l != 3; ++l)
       {
-         if (fabs(p.x - t_[l].x) < 4 && fabs(p.y - t_[l].y) < 4)
+         if (fabs(p.x - t_[l].x) < 15 && fabs(p.y - t_[l].y) < 15)
          {
             idx_ = l;
             return true;
