@@ -3,7 +3,7 @@
 #include <cg/operations/orientation.h>
 #include "random_utils.h"
 
-TEST(orientation, uniform_line)
+TEST(DISABLED_orientation, uniform_line)
 {
    boost::random::mt19937 gen;
    boost::random::uniform_real_distribution<> distr(-(1LL << 53), (1LL << 53));
