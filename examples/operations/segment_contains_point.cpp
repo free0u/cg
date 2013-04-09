@@ -36,7 +36,7 @@ struct triangle_contains_point_viewer : cg::visualization::viewer_adapter
    {
       p.corner_stream() << "press mouse rbutton near segment vertex to move it"
                         << cg::visualization::endl
-                        << "if segment is green segment contains cursor point"
+                        << "if segment is red segment contains cursor point"
                         << cg::visualization::endl;
    }
 

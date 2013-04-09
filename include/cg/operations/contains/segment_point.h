@@ -10,7 +10,7 @@ namespace cg
 {
    inline bool contains(segment_2 s, point_2 const & q)
    {
-      if (cg::orientation(s[0], s[1], q) != CG_COLLINEAR)
+      if (orientation(s[0], s[1], q) != CG_COLLINEAR)
       {
          return false;
       }
