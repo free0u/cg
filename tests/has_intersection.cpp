@@ -71,3 +71,30 @@ TEST(has_intersection, segment_segment6)
 
     EXPECT_FALSE(cg::has_intersection(a, b));
 }
+
+TEST(has_intersection, triangle_segment0)
+{
+   using cg::point_2;
+   using cg::segment_2;
+
+   cg::triangle_2 t(point_2(0, 0), point_2(1, 1), point_2(2, 0));
+
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(0, 0), point_2(-1, -1))));
+
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(0, 1), point_2(2, 1))));
+   EXPECT_FALSE(cg::has_intersection(t, segment_2(point_2(0, 2), point_2(2, 2))));
+}
+
+
+TEST(has_intersection, triangle_segment1)
+{
+   using cg::point_2;
+
+   cg::triangle_2 t(point_2(0, 0), point_2(3, 0), point_2(0, 3));
+
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(0, 0), point_2(1, 1))));
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(0, 1), point_2(1, 0))));
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(0, 0), point_2(2, 2))));
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(-2, 2), point_2(10, 2))));
+   EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(1, -1), point_2(-1, 1))));
+}

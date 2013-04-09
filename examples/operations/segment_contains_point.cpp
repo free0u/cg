@@ -80,6 +80,6 @@ private:
 int main(int argc, char ** argv)
 {
    QApplication app(argc, argv);
-   triangle_contains_point_viewer viewer;
+   segment_contains_point_viewer viewer;
    cg::visualization::run_viewer(&viewer, "segment contains point");
 }
