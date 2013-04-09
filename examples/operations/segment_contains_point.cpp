@@ -17,9 +17,9 @@ using cg::point_2f;
 using cg::point_2;
 
 // works bad because mouse point has little accurasy and misses segment
-struct triangle_contains_point_viewer : cg::visualization::viewer_adapter
+struct segment_contains_point_viewer : cg::visualization::viewer_adapter
 {
-   triangle_contains_point_viewer()
+   segment_contains_point_viewer()
       : t_(point_2(0, 0), point_2(100, 100))
    {}
 
@@ -81,5 +81,5 @@ int main(int argc, char ** argv)
 {
    QApplication app(argc, argv);
    triangle_contains_point_viewer viewer;
-   cg::visualization::run_viewer(&viewer, "triangle contains point");
+   cg::visualization::run_viewer(&viewer, "segment contains point");
 }
