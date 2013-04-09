@@ -9,15 +9,5 @@
 
 namespace cg
 {
-   inline bool has_intersection(triangle_2 const & t, segment_2 const & s)
-   {
-      if (contains(t, s[0]))
-         return true;
-
-      for (size_t l = 0; l != 3; ++l)
-         if (has_intersection(t.side(l), s))
-            return true;
-
-      return false;
-   }
+   inline bool has_intersection(triangle_2 const & t, segment_2 const & s);
 }
