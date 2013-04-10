@@ -14,4 +14,7 @@ target_link_libraries(vis_segment_intersect_segment visualization ${GMP_LIBRARIE
 add_executable(vis_segment_intersect_triangle segment_intersect_triangle.cpp)
 target_link_libraries(vis_segment_intersect_triangle visualization ${GMP_LIBRARIES})
 
+add_executable(vis_rectangle_contains_point rectangle_contains_point.cpp)
+target_link_libraries(vis_rectangle_contains_point visualization ${GMP_LIBRARIES})
+
 

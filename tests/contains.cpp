@@ -2,6 +2,7 @@
 
 #include <cg/operations/contains/segment_point.h>
 #include <cg/operations/contains/triangle_point.h>
+#include <cg/operations/contains/rectangle_point.h>
 
 TEST(contains, triangle_point0)
 {
@@ -49,4 +50,21 @@ TEST(contains, segment_point)
 
    EXPECT_FALSE(cg::contains(s, point_2(1, 0)));
    EXPECT_FALSE(cg::contains(s, point_2(0, 1)));
+}
+
+TEST(contains, rectangle_point)
+{
+   using cg::point_2;
+   cg::rectangle_2 rec(cg::range_t<double>(1, 4), cg::range_t<double>(1, 3));
+
+   for (size_t i = 0; i != 2; ++i)
+   {
+      for (size_t j = 0; j != 2; ++j)
+      {
+         EXPECT_TRUE(cg::contains(rec, rec.corner(i, j)));
+      }
+   }
+
+   EXPECT_TRUE(cg::contains(rec, point_2(2, 2)));
+   EXPECT_FALSE(cg::contains(rec, point_2(-1, 0)));
 }

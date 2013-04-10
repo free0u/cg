@@ -5,5 +5,8 @@
 
 namespace cg
 {
-   inline bool contains(rectangle_2 const & r, point_2 const & q);
+   inline bool contains(rectangle_2 const & r, point_2 const & q)
+   {
+      return r.contains(q);
+   }
 }
