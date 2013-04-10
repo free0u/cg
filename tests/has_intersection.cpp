@@ -2,6 +2,7 @@
 
 #include <cg/operations/has_intersection/segment_segment.h>
 #include <cg/operations/has_intersection/triangle_segment.h>
+#include <cg/operations/has_intersection/rectangle_segment.h>
 
 using cg::point_2;
 using cg::segment_2;
@@ -98,3 +99,31 @@ TEST(has_intersection, triangle_segment1)
    EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(-2, 2), point_2(10, 2))));
    EXPECT_TRUE(cg::has_intersection(t, segment_2(point_2(1, -1), point_2(-1, 1))));
 }
+
+
+TEST(has_intersection, rectangle_segment)
+{
+   using cg::point_2;
+   using cg::segment_2;
+   cg::rectangle_2 rec(cg::range_t<double>(1, 5), cg::range_t<double>(1, 4));
+
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(1, 1), point_2(5, 1))));
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(1, 1), point_2(1, 4))));
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(1, 4), point_2(5, 4))));
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(5, 4), point_2(5, 1))));
+
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(1, 1), point_2(5, 4))));
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(1, 4), point_2(5, 4))));
+
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(2, 2), point_2(3, 3))));
+
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(2, 0), point_2(2, 3))));
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(0, 3), point_2(20, 3))));
+   EXPECT_TRUE(cg::has_intersection(rec, segment_2(point_2(0, 3), point_2(3, 0))));
+
+   EXPECT_FALSE(cg::has_intersection(rec, segment_2(point_2(0, 3), point_2(0, 4))));
+   EXPECT_FALSE(cg::has_intersection(rec, segment_2(point_2(0, 1), point_2(1, 0))));
+   EXPECT_FALSE(cg::has_intersection(rec, segment_2(point_2(0, 10), point_2(20, 10))));
+
+}
+
