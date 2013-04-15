@@ -21,8 +21,8 @@ using cg::segment_2;
 struct segment_intersect_triangle_viewer : cg::visualization::viewer_adapter
 {
    segment_intersect_triangle_viewer()
-      : t_(point_2(0, -50), point_2(0, 50), point_2(20, 0)),
-        s_(point_2(-50, 0), point_2(50, 0))
+      : s_(point_2(-50, 0), point_2(50, 0)),
+        t_(point_2(0, -50), point_2(0, 50), point_2(20, 0))
    {
    }
 
