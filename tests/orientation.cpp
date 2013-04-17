@@ -3,6 +3,8 @@
 #include <cg/operations/orientation.h>
 #include "random_utils.h"
 
+#include <vector>
+
 TEST(DISABLED_orientation, uniform_line)
 {
    boost::random::mt19937 gen;
@@ -23,3 +25,28 @@ TEST(DISABLED_orientation, uniform_line)
       }
    }
 }
+
+
+TEST(orientation, counterclockwise)
+{
+   using cg::point_2;
+   std::vector<point_2> a;
+
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(1, 0));
+   a.push_back(point_2(1, 1));
+   a.push_back(point_2(0, 1));
+
+   EXPECT_TRUE(cg::counterclockwise(cg::contour_2(a)));
+
+
+   a.clear();
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(0, 1));
+   a.push_back(point_2(1, 1));
+   a.push_back(point_2(1, 0));
+
+   EXPECT_FALSE(cg::counterclockwise(cg::contour_2(a)));
+}
+
+

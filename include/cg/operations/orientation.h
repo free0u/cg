@@ -97,5 +97,16 @@ namespace cg
       return *orientation_r()(a, b, c);
    }
 
-   inline bool counterclockwise(contour_2 const & c);
+   inline bool counterclockwise(contour_2 const & c)
+   {
+      contour_2::const_iterator min_point = std::min_element(c.begin(), c.end());
+
+      contour_2::circulator_t it_prev = --c.circulator(min_point);
+      contour_2::circulator_t it_next = ++c.circulator(min_point);
+
+      point_2 prev = *it_prev;
+      point_2 next = *it_next;
+
+      return prev < next;
+   }
 }
