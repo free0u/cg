@@ -4,3 +4,4 @@ project(operations-example)
 
 add_subdirectory(contains)
 add_subdirectory(intersect)
+add_subdirectory(orientation)
