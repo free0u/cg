@@ -47,6 +47,18 @@ TEST(orientation, counterclockwise)
    a.push_back(point_2(1, 0));
 
    EXPECT_FALSE(cg::counterclockwise(cg::contour_2(a)));
+
+   a.clear();
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(2, 0));
+   a.push_back(point_2(1, 2));
+   EXPECT_TRUE(cg::counterclockwise(cg::contour_2(a)));
+
+   a.clear();
+   a.push_back(point_2(1, 0));
+   a.push_back(point_2(3, 0));
+   a.push_back(point_2(0, 2));
+   EXPECT_TRUE(cg::counterclockwise(cg::contour_2(a)));
 }
 
 
