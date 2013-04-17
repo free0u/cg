@@ -2,22 +2,5 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 project(operations-example)
 
-add_executable(vis_triangle_contains_point triangle_contains_point.cpp)
-target_link_libraries(vis_triangle_contains_point visualization ${GMP_LIBRARIES})
-
-add_executable(vis_segment_contains_point segment_contains_point.cpp)
-target_link_libraries(vis_segment_contains_point visualization ${GMP_LIBRARIES})
-
-add_executable(vis_segment_intersect_segment segment_intersect_segment.cpp)
-target_link_libraries(vis_segment_intersect_segment visualization ${GMP_LIBRARIES})
-
-add_executable(vis_segment_intersect_triangle segment_intersect_triangle.cpp)
-target_link_libraries(vis_segment_intersect_triangle visualization ${GMP_LIBRARIES})
-
-add_executable(vis_rectangle_contains_point rectangle_contains_point.cpp)
-target_link_libraries(vis_rectangle_contains_point visualization ${GMP_LIBRARIES})
-
-add_executable(vis_segment_intersect_rectangle segment_intersect_rectangle.cpp)
-target_link_libraries(vis_segment_intersect_rectangle visualization ${GMP_LIBRARIES})
-
-
+add_subdirectory(contains)
+add_subdirectory(intersect)
