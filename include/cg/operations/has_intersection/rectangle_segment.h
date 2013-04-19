@@ -16,6 +16,5 @@ namespace cg
       triangle_2 t2(t.corner(0, 0), t.corner(0, 1), t.corner(1, 1));
 
       return has_intersection(t1, s) || has_intersection(t2, s);
-
    }
 }

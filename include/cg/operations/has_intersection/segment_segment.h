@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cg/primitives/segment.h>
-#include <cg/primitives/range.h>
-#include <cg/primitives/point.h>
 
 #include <cg/operations/orientation.h>
 
