@@ -11,7 +11,7 @@
 namespace cg
 {
    template <class BidIter>
-   BidIter contour_graham_hull(BidIter p, BidIter q)
+   BidIter contour_hull(BidIter p, BidIter q)
    {
       if (p == q) // 0
          return p;

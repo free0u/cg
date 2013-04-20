@@ -32,6 +32,6 @@ namespace cg
                         }
                );
 
-      return contour_graham_hull(t, q);
+      return contour_hull(t, q);
    }
 }

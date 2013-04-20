@@ -39,6 +39,6 @@ namespace cg
       std::sort(s, l);
       std::sort(part, q, std::greater<typename std::iterator_traits<BidIter>::value_type>());
 
-      return cg::contour_graham_hull(t, q);
+      return cg::contour_hull(t, q);
    }
 }
