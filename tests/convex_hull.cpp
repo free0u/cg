@@ -216,7 +216,7 @@ TEST(convex_hull, uniform_andrew1)
    using cg::point_2;
 
 
-   for (int cnt = 0; cnt <= 4; ++cnt)
+   for (int cnt = 1; cnt <= 5; ++cnt)
    {
       for (int i = 0; i < 100; ++i)
       {
