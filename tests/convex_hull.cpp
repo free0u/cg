@@ -28,7 +28,7 @@ bool is_convex_hull(FwdIter p, FwdIter c, FwdIter q)
    return true;
 }
 
-TEST(convex_hull, simple)
+TEST(convex_hull, simple_graham)
 {
    using cg::point_2;
 
@@ -42,10 +42,10 @@ TEST(convex_hull, simple)
    EXPECT_TRUE(is_convex_hull(pts.begin(), cg::graham_hull(pts.begin(), pts.end()), pts.end()));
 }
 
-TEST(convex_hull, uniform)
+TEST(convex_hull, uniform_graham)
 {
    using cg::point_2;
 
-   std::vector<point_2> pts = uniform_points(10000000);
+   std::vector<point_2> pts = uniform_points(1000);
    EXPECT_TRUE(is_convex_hull(pts.begin(), cg::graham_hull(pts.begin(), pts.end()), pts.end()));
 }
