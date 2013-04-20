@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tools.h"
+
 #include <boost/range/algorithm/sort.hpp>
 
 #include <cg/operations/orientation.h>
