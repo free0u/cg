@@ -19,7 +19,12 @@ bool is_convex_hull(FwdIter p, FwdIter c, FwdIter q)
          switch (orientation(*t, *s, *b))
          {
          case cg::CG_RIGHT: return false;
-         case cg::CG_COLLINEAR: return collinear_are_ordered_along_line(*t, *b, *s);
+         case cg::CG_COLLINEAR:
+            if (!collinear_are_ordered_along_line(*t, *b, *s))
+            {
+               return false;
+            }
+            continue;
          case cg::CG_LEFT: continue;
          }
       }
