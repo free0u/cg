@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <iterator>
+#include <cg/io/point.h>
 
 using std::cerr;
 using std::endl;
@@ -18,7 +19,7 @@ namespace cg
    template <class BidIter>
    BidIter out(BidIter p, BidIter q)
    {
-      for (BidIter i = p; i != q; ++i) cerr << *i;
+      for (BidIter i = p; i != q; ++i) cerr << (*i);
       cerr << endl;
    }
 

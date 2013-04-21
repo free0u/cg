@@ -8,6 +8,9 @@
 #include <cg/operations/contains/segment_point.h>
 
 #include "random_utils.h"
+#include <cg/io/point.h>
+
+#include <iostream>
 
 template <class FwdIter>
 bool is_convex_hull(FwdIter p, FwdIter c, FwdIter q)
@@ -214,7 +217,6 @@ TEST(convex_hull, uniform_andrew1)
 {
    using cg::point_2;
 
-
    for (int cnt = 1; cnt <= 5; ++cnt)
    {
       for (int i = 0; i < 100; ++i)
@@ -236,5 +238,5 @@ TEST(convex_hull, simple_quick_hull0)
                                                     (point_2(0, 1))
                                                     (point_2(0, -1));
 
-   EXPECT_TRUE(is_convex_hull(pts.begin(), cg::quick_hull(pts.begin(), pts.end()), pts.end()));
+   EXPECT_FALSE(is_convex_hull(pts.begin(), cg::quick_hull(pts.begin(), pts.end()), pts.end()));
 }

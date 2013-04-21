@@ -16,7 +16,7 @@ namespace cg
 
       std::iter_swap(p, std::min_element(p, q));
 
-      RandIter t = p++;
+      BidIter t = p++;
 
       if (p == q)
          return p;
