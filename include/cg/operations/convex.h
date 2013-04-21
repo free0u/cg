@@ -25,6 +25,9 @@ namespace cg
          {
             return false;
          }
+         ++t1;
+         ++t2;
+         ++t3;
       }
 
       return true;
