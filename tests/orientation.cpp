@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cg/operations/orientation.h>
+#include <cg/operations/convex.h>
 #include <misc/random_utils.h>
 
 #include "random_utils.h"
@@ -61,4 +62,28 @@ TEST(orientation, counterclockwise)
    EXPECT_TRUE(cg::counterclockwise(cg::contour_2(a)));
 }
 
+TEST(orientation, convex0)
+{
+   using cg::point_2;
+   std::vector<point_2> a;
 
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(1, -1));
+   a.push_back(point_2(2, 0));
+   a.push_back(point_2(1, 3));
+   EXPECT_TRUE(cg::convex(cg::contour_2(a)));
+
+   a.clear();
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(1, 0));
+   a.push_back(point_2(2, 0));
+   a.push_back(point_2(1, 3));
+   EXPECT_TRUE(cg::convex(cg::contour_2(a)));
+
+   a.clear();
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(1, 1));
+   a.push_back(point_2(2, 0));
+   a.push_back(point_2(1, 3));
+   EXPECT_FALSE(cg::convex(cg::contour_2(a)));
+}
