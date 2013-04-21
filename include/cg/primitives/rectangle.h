@@ -3,13 +3,15 @@
 #include "range.h"
 #include "point.h"
 
+#include <boost/optional.hpp>
+
 namespace cg
 {
    template <class Scalar> struct rectangle_2t;
 
-   typedef rectangle_2t<double> rectangle_2;
-   typedef rectangle_2t<float>  rectangle_2f;
-   typedef rectangle_2t<int>    rectangle_2i;
+   typedef rectangle_2t<double>  rectangle_2;
+   typedef rectangle_2t<float>   rectangle_2f;
+   typedef rectangle_2t<int>     rectangle_2i;
 
    template <class Scalar>
    struct rectangle_2t
@@ -38,6 +40,33 @@ namespace cg
          return point_2t<Scalar> (  (h == 0) ? x.inf : x.sup,
                                     (v == 0) ? y.inf : y.sup  );
       }
+
+      void set_corner(size_t h, size_t v, point_2t<Scalar> p, boost::optional<Scalar> const& min_range)
+      {
+         range_t<Scalar> nx(x), ny(y);
+
+         (h == 0) ? (nx.inf = p.x) : (nx.sup = p.x);
+         (v == 0) ? (ny.inf = p.y) : (ny.sup = p.y);
+
+         if (min_range)
+         {
+            Scalar t = *min_range;
+            if (size(nx) >= t && size(ny) >= t)
+            {
+               x = nx;
+               y = ny;
+            }
+         } else
+         {
+            x = nx;
+            y = ny;
+         }
+      }
+
+
+
+      point_2t<Scalar>         operator [] (size_t id)       { return corner(id % 2, id / 2); }
+      point_2t<Scalar> const   operator [] (size_t id) const { return corner(id % 2, id / 2); }
 
       static rectangle_2t maximal()
       {

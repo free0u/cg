@@ -11,13 +11,18 @@ namespace cg
    template<class Scalar>
    bool has_intersection(triangle_2t<Scalar> const & t, segment_2t<Scalar> const & s)
    {
-      if (contains(t, s[0]))
+      if (contains(t, s[0]) || contains(t, s[1]))
+      {
          return true;
+      }
 
-      for (size_t l = 0; l != 3; ++l)
-         if (has_intersection(t.side(l), s))
+      for (size_t i = 0; i != 3; ++i)
+      {
+         if (has_intersection(t.side(i), s))
+         {
             return true;
-
+         }
+      }
       return false;
    }
 }

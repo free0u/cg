@@ -1,19 +1,20 @@
 #pragma once
 
+#include <cg/primitives/point.h>
 #include <cg/primitives/rectangle.h>
+#include <cg/primitives/triangle.h>
 #include <cg/primitives/segment.h>
 
-#include <cg/operations/has_intersection/segment_segment.h>
+#include <cg/operations/contains/rectangle_point.h>
+#include <cg/operations/has_intersection/triangle_segment.h>
 
 namespace cg
 {
-   template<class Scalar>
-   bool has_intersection(rectangle_2t<Scalar> const& r, segment_2t<Scalar> const& s)
+   inline bool has_intersection(rectangle_2 const & t, segment_2 const & s)
    {
-      return r.contains(s[0]) ||
-             has_intersection(segment_2t<Scalar>(r.corner(0, 0), r.corner(0, 1)), s) ||
-             has_intersection(segment_2t<Scalar>(r.corner(0, 1), r.corner(1, 1)), s) ||
-             has_intersection(segment_2t<Scalar>(r.corner(1, 1), r.corner(1, 0)), s) ||
-             has_intersection(segment_2t<Scalar>(r.corner(1, 0), r.corner(0, 0)), s);
+      triangle_2 t1(t.corner(0, 0), t.corner(1, 0), t.corner(1, 1));
+      triangle_2 t2(t.corner(0, 0), t.corner(0, 1), t.corner(1, 1));
+
+      return has_intersection(t1, s) || has_intersection(t2, s);
    }
 }

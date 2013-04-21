@@ -6,25 +6,27 @@
 
 namespace cg
 {
-   template<class Scalar>
-   bool has_intersection(segment_2t<Scalar> const & a, segment_2t<Scalar> const & b)
+   bool has_intersection(segment_2 a, segment_2 b)
    {
-      orientation_t ab[2];
-      for (size_t l = 0; l != 2; ++l)
-         ab[l] = orientation(a[0], a[1], b[l]);
+      orientation_t t0 = orientation(a[0], a[1], b[0]);
+      orientation_t t1 = orientation(a[0], a[1], b[1]);
 
-      if (ab[0] == ab[1] && ab[0] == CG_COLLINEAR)
-         return (min(a) <= b[0] && max(a) >= b[0])
-            || (min(a) <= b[1] && max(a) >= b[1])
-            || (min(b) <= a[0] && max(b) >= a[0])
-            || (min(b) <= a[1] && max(b) >= a[1]);
-   
-      if (ab[0] == ab[1])
-         return false;
+      if (t0 == t1 && t0 == CG_COLLINEAR) // segments is collinear
+      {
+         if (a[0] > a[1]) {
+            std::swap(a[0], a[1]);
+         }
+         if (b[0] > b[1]) {
+            std::swap(b[0], b[1]);
+         }
+         range_t<point_2> ra(a[0], a[1]);
+         range_t<point_2> rb(b[0], b[1]);
+         return !((ra & rb).is_empty());
+      }
 
-      for (size_t l = 0; l != 2; ++l)
-         ab[l] = orientation(b[0], b[1], a[l]);
+      orientation_t t2 = orientation(b[0], b[1], a[0]);
+      orientation_t t3 = orientation(b[0], b[1], a[1]);
 
-      return ab[0] != ab[1];
+      return t0 != t1 && t2 != t3;
    }
 }

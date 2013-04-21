@@ -10,10 +10,28 @@
 #include <vector>
 #include <iterator>
 
+using std::cerr;
+using std::endl;
+
 namespace cg
 {
    template <class BidIter>
-   BidIter andrew_hull(BidIter p, BidIter q)
+   BidIter out(BidIter p, BidIter q)
+   {
+      for (BidIter i = p; i != q; ++i) cerr << *i;
+      cerr << endl;
+   }
+
+
+
+   template <class BidIter>
+   BidIter quick_hull_helper(BidIter p, BidIter q, BidIter A, BidIter B)
+   {
+
+   }
+
+   template <class BidIter>
+   BidIter quick_hull(BidIter p, BidIter q)
    {
       if (p == q)
          return p;
@@ -29,15 +47,14 @@ namespace cg
 
       BidIter part = std::partition(p, q, [t, s] (point_2 const & a)
       {
-         return orientation(*t, *s, a) != CG_LEFT;
+         return orientation(*t, *s, a) != CG_RIGHT;
       });
-
 
       BidIter l = part;
       std::iter_swap(s, --l);
 
-      std::sort(s, l);
-      std::sort(part, q, std::greater<typename std::iterator_traits<BidIter>::value_type>());
+      out(t, l);
+      out(l, q);
 
       return cg::contour_hull(t, q);
    }
