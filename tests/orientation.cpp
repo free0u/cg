@@ -86,4 +86,13 @@ TEST(orientation, convex0)
    a.push_back(point_2(2, 0));
    a.push_back(point_2(1, 3));
    EXPECT_FALSE(cg::convex(cg::contour_2(a)));
+
+   a.clear();
+   a.push_back(point_2(0, 0));
+   a.push_back(point_2(2, 2));
+   a.push_back(point_2(0, 1));
+   a.push_back(point_2(-2, 2));
+   EXPECT_FALSE(cg::convex(cg::contour_2(a)));
+
+
 }
