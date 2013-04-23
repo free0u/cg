@@ -12,3 +12,7 @@ add_executable(v_rect_cont_pnt rectangle_contains_point.cpp)
 target_link_libraries(v_rect_cont_pnt visualization ${GMP_LIBRARIES})
 
 
+add_executable(v_ccw_conv_cont_pnt ccw_convex_contour_contains_point.cpp)
+target_link_libraries(v_ccw_conv_cont_pnt visualization ${GMP_LIBRARIES})
+
+
