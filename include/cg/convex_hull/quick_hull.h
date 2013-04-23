@@ -54,8 +54,8 @@ namespace cg
       BidIter l = part;
       std::iter_swap(s, --l);
 
-      out(t, l);
-      out(l, q);
+      //out(t, l);
+      //out(l, q);
 
       return cg::contour_hull(t, q);
    }
