@@ -99,6 +99,8 @@ namespace cg
 
    inline bool counterclockwise(contour_2 const & c)
    {
+      if (c.size() < 3) return true;
+
       contour_2::const_iterator it_min_point = std::min_element(c.begin(), c.end());
 
       point_2 min_point = *it_min_point;

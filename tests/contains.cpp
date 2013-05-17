@@ -265,5 +265,3 @@ TEST(contains, convex_ccw_point_uniform1)
       }
    }
 }
-
-
