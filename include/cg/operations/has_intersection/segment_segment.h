@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cg/primitives/segment.h>
-
+#include <cg/operations/contains/segment_point.h>
 #include <cg/operations/orientation.h>
 
 namespace cg
