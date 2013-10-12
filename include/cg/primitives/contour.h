@@ -17,6 +17,9 @@ namespace cg
    template <class Scalar>
    struct contour_2t
    {
+      contour_2t()
+      {}
+
       contour_2t(std::vector<point_2t<Scalar> > const& pts) : pts_(pts)
       {}
 
@@ -30,6 +33,10 @@ namespace cg
       const_iterator end() const
       {
          return pts_.end();
+      }
+
+      void clear() {
+         pts_.clear();
       }
 
       circulator_t circulator() const
