@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <stack>
 
@@ -127,6 +129,8 @@ namespace cg
             }
          }
       }
+      if (is_visible(contours, p, s_point, s_point, f_point)) result.push_back(s_point);
+      if (is_visible(contours, p, f_point, s_point, f_point)) result.push_back(f_point);
 
       return result;
    }
