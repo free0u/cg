@@ -1,6 +1,3 @@
-#include <vector>
-#include <stack>
-
 #include <QColor>
 #include <QApplication>
 
@@ -9,117 +6,173 @@
 #include "cg/visualization/viewer_adapter.h"
 #include "cg/visualization/draw_util.h"
 
-#include <cg/operations/orientation.h>
-#include <cg/operations/convex.h>
-#include <cg/operations/has_intersection/segment_segment.h>
-#include <cg/visibility/visibility_slow.h>
-
-#include <cg/primitives/contour.h>
-
 #include "cg/io/point.h"
 
-using cg::point_2;
+#include <cg/primitives/point.h>
+#include <cg/visibility/visibility_slow.h>
+
+#include <cg/visibility/short_path.h>
+
+#include <boost/assign/list_of.hpp>
+#include <vector>
+
 using cg::point_2f;
-using cg::vector_2f;
-using cg::contour_2;
-using cg::segment_2;
+using cg::point_2;
 using std::vector;
 
-
-struct vis_graph1_viewer : cg::visualization::viewer_adapter
+struct contour_contains_point_viewer : cg::visualization::viewer_adapter
 {
-   vis_graph1_viewer()
+   contour_contains_point_viewer()
+      : current_polygon_(0)
+      , modification_mode_(false)
+      , s(-120, -120)
+      , f(120, 120)
+   {}
+
+   void draw(cg::visualization::drawer_type & drawer) const override
    {
-      in_build = true;
+      drawer.set_color(Qt::white);
+      for(size_t i = 0; i < contours.size(); ++i)
+         for(size_t l = 0, lp = contours[i].size() - 1; l != contours[i].size(); lp = l++)
+            drawer.draw_line(contours[i][lp], contours[i][l]);
 
-//      in_build = false;
-//      contour_2 cont;
-//      cont.add_point(point_2(0, 0));
-//      cont.add_point(point_2(100, 0));
-//      cont.add_point(point_2(100, 100));
-//      cont.add_point(point_2(0, 100));
-//      contours.push_back(cont);
-
-//      ab.push_back(point_2(-50, 50));
-//      ab.push_back(point_2(150, 50));
-
-//      build_graph();
-   }
-
-   void draw(cg::visualization::drawer_type & drawer) const
-   {
-      drawer.set_color(Qt::green);
-      for (size_t j = 0; j < contours.size(); ++j) {
-         size_t sz = contours[j].size();
-         for (size_t i = 1; i < sz; ++i)
-         {
-            drawer.draw_line(contours[j][i - 1], contours[j][i]);
-         }
-         drawer.draw_line(contours[j][0], contours[j][sz - 1]);
-      }
-
-      drawer.set_color(Qt::yellow);
-
-      size_t sz = current_contour.size();
-      if (sz > 0) {
-         for (size_t i = 1; i < sz; ++i)
-         {
-            drawer.draw_line(current_contour[i - 1], current_contour[i]);
-         }
-         drawer.draw_line(current_contour[0], current_contour[sz - 1]);
-      }
-
-      drawer.set_color(Qt::yellow);
-      for (size_t i = 0; i < ab.size(); ++i) {
-         drawer.draw_point(ab[i], 5);
-      }
-      if (ab.size() == 2) {
-         // view visibility graph
+      if(modification_mode_)
+      {
          drawer.set_color(Qt::red);
-         for (size_t i = 0; i < gr.size(); ++i) {
-            for (size_t j = 0; j < gr[i].size(); ++j) {
-               drawer.draw_line(gr_v[i], gr[i][j]);
-            }
+         for(size_t l = 0, lp = contours[current_polygon_].size() - 1; l != contours[current_polygon_].size(); lp = l++)
+            drawer.draw_line(contours[current_polygon_][lp], contours[current_polygon_][l]);
+      }
+
+      drawer.set_color(Qt::green);
+
+      for (size_t i = 0; i < ans.size(); ++i) {
+         for (size_t j = 0; j < ans[i].size(); ++j) {
+            drawer.draw_line(gr_v[i], ans[i][j]);
          }
       }
+
+      drawer.set_color(Qt::blue);
+      drawer.draw_point(f, 15);
+      drawer.draw_point(s, 15);
+
+      drawer.set_color(Qt::blue);
+      for(int i = 0; i < (int)path.size() - 1; ++i)
+         drawer.draw_line(path[i], path[i + 1]);
    }
 
-   void print(cg::visualization::printer_type & p) const
+   void print(cg::visualization::printer_type & p) const override
    {
-//     p.corner_stream() << "double-click to clear." << cg::visualization::endl
-//                  << "press mouse rbutton for add vertex (click to first point to complete contour)" << cg::visualization::endl
-//                  << "move vertex with rbutton" << cg::visualization::endl
-//                  << "yellow contour -- not ccw" << cg::visualization::endl
-//                  << "green contour -- convex" << cg::visualization::endl
-//                  << "red contour -- not convex" << cg::visualization::endl;
+      p.corner_stream() << "Double-click to clear"
+                        << cg::visualization::endl
+                        << "Click in insertion mode to create new polygon"
+                        << cg::visualization::endl
+                        << "Click in modification mode to add new point to polygon"
+                        << cg::visualization::endl
+                        << "Current mode: " << (modification_mode_ ? "modification" : "insertion")
+                        << cg::visualization::endl
+                        << "To switch mode press i"
+                        << cg::visualization::endl;
    }
 
    bool on_double_click(const point_2f & p)
    {
-      if (in_build) {
-         contours.push_back(current_contour);
-         current_contour.clear();
-         return true;
-      }
-
+      contours.clear();
+      ans.clear();
+      path.clear();
+      modification_mode_ = false;
       return true;
    }
 
-   bool on_press(const point_2f & p)
+   bool on_press(const point_2f & p) override
    {
-      if (in_build) {
-         current_contour.add_point(p);
+      if(fabs(p.x - s.x) < 4 && fabs(p.y - s.y) < 4)
+      {
+         idx_ = -1;
+         return true;
+      }
+      if(fabs(p.x - f.x) < 4 && fabs(p.y - f.y) < 4)
+      {
+         idx_ = -2;
          return true;
       }
 
-      if (ab.size() < 2) {
-         ab.push_back(p);
+      for(size_t i = 0; i < contours.size(); ++i)
+      {
+         for (size_t l = 0; l != contours[i].size(); ++l)
+         {
+            if (fabs(p.x - contours[i][l].x) < 6 && fabs(p.y - contours[i][l].y) < 6)
+            {
+               current_polygon_ = i;
+               idx_ = l;
+               return true;
+            }
+         }
       }
 
-      if (ab.size() == 2) {
-         build_graph();
+      if(modification_mode_)
+      {
+         contours[current_polygon_].add_point(p);
+         gr_v.clear();
+         gr_v.push_back(s);
+         for (contour_2 const& contour : contours) {
+            for (point_2 const& point : contour) {
+               gr_v.push_back(point);
+            }
+         }
+         gr_v.push_back(f);
+         ans = cg::build_graph(contours, s, f);
+         path = cg::get_shortest_path(ans, gr_v);
+         return true;
+      }
+      else
+      {
+         cg::contour_2 contour;
+         contour.add_point(p);
+         contours.push_back(contour);
+         modification_mode_ = true;
+         current_polygon_ = contours.size() - 1;
+         gr_v.clear();
+         gr_v.push_back(s);
+         for (contour_2 const& contour : contours) {
+            for (point_2 const& point : contour) {
+               gr_v.push_back(point);
+            }
+         }
+         gr_v.push_back(f);
+         ans = cg::build_graph(contours, s, f);
+         path = cg::get_shortest_path(ans, gr_v);
+         return true;
       }
 
+      return false;
+   }
+
+   bool on_release(const point_2f & p) override
+   {
+      idx_.reset();
+      return false;
+   }
+
+   bool on_move(const point_2f & p) override
+   {
+      if (!idx_)
+         return false;
+      if(*idx_ == -1)
+         s = p;
+      else if(*idx_ == -2)
+         f = p;
+      else
+         contours[current_polygon_][*idx_] = p;
+      gr_v.clear();
+      gr_v.push_back(s);
+      for (contour_2 const& contour : contours) {
+         for (point_2 const& point : contour) {
+            gr_v.push_back(point);
+         }
+      }
+      gr_v.push_back(f);
+      ans = cg::build_graph(contours, s, f);
+      path = cg::get_shortest_path(ans, gr_v);
       return true;
    }
 
@@ -127,40 +180,48 @@ struct vis_graph1_viewer : cg::visualization::viewer_adapter
    {
       switch (key)
       {
-         case Qt::Key_Space : in_build = false; break;
-         default : return false;
+      case Qt::Key_I :
+         if(!contours.empty())
+         {
+            modification_mode_ = !modification_mode_;
+            current_polygon_ = 0;
+         }
+         break;
+      case Qt::Key_Left :
+         if(modification_mode_)
+         {
+            if(--current_polygon_ == -1)
+               current_polygon_ += contours.size();
+         }
+         break;
+      case Qt::Key_Right :
+         if(modification_mode_)
+         {
+            if(++current_polygon_ == contours.size())
+               current_polygon_ -= contours.size();
+         }
+         break;
+      default:
+         return false;
       }
       return true;
    }
 
-   void build_graph() {
-      gr = cg::build_graph(contours, ab[0], ab[1]);
-
-      gr_v.clear();
-      gr_v.push_back(ab[0]);
-      for (contour_2 const& contour : contours) {
-         for (point_2 const& point : contour) {
-            gr_v.push_back(point);
-         }
-      }
-      gr_v.push_back(ab[1]);
-   }
-
 private:
-   vector<contour_2> contours;
-   contour_2 current_contour;
-   bool in_build;
-
-   vector<point_2> ab;
-   vector<vector<point_2> > gr;
+   std::vector< cg::contour_2 > contours;
    vector<point_2> gr_v;
+   boost::optional<int> idx_;
+   int current_polygon_;
+   boost::optional<cg::point_2> current_point_;
+   vector<vector<point_2> > ans;
+   std::vector< cg::point_2 > path;
+   bool modification_mode_;
+   cg::point_2 s, f;
 };
 
 int main(int argc, char ** argv)
 {
    QApplication app(argc, argv);
-   vis_graph1_viewer viewer;
-   cg::visualization::run_viewer(&viewer, "vis_graph1 viewer");
+   contour_contains_point_viewer viewer;
+   cg::visualization::run_viewer(&viewer, "Visibility");
 }
-
-
